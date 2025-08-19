@@ -51,6 +51,8 @@ analysis_benchmark.json
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
+/build/
+/coverage/
 **/generated_plugin_registrant.dart
 .packages
 .pub-preload-cache/
