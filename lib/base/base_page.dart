@@ -15,7 +15,11 @@ abstract class BasePage<Controller extends BaseController>
 
   @override
   Widget build(BuildContext context) {
-    return _BasePageWrapper(controller: controller, page: buildPage(context));
+    return _BasePageWrapper(
+      controller: controller,
+      page: buildPage(context),
+      initPage: initPage,
+    );
   }
 }
 
@@ -23,21 +27,21 @@ class _BasePageWrapper<Controller extends BaseController>
     extends StatefulWidget {
   final Controller controller;
   final Widget page;
+  final Function(BuildContext context) initPage;
 
   const _BasePageWrapper({
     super.key,
     required this.controller,
     required this.page,
+    required this.initPage,
   });
 
   @override
   State<_BasePageWrapper> createState() => _BasePageWrapperState();
-
-  void initPage(BuildContext context) {}
 }
 
 class _BasePageWrapperState extends State<_BasePageWrapper>
-    with WidgetsBindingObserver, RouteAware, SingleTickerProviderStateMixin {
+    with WidgetsBindingObserver, RouteAware, TickerProviderStateMixin {
   PageRoute? _route;
   bool _isVisible = false;
   bool _isInitFirstFrameCallback = false;
@@ -52,7 +56,7 @@ class _BasePageWrapperState extends State<_BasePageWrapper>
     WidgetsBinding.instance.addObserver(this);
     widget.controller.initTickerProvider(this);
     widget.controller.onInit();
-    widget.initPage(context);
+    widget.initPage?.call(context);
   }
 
   @override
