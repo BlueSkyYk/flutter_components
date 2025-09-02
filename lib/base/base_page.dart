@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_components/component/app_route_observer.dart';
 
-import '../component/app_route_observer.dart';
 import 'base_controller.dart';
 
 abstract class BasePage<Controller extends BaseController>
@@ -17,7 +17,7 @@ abstract class BasePage<Controller extends BaseController>
   Widget build(BuildContext context) {
     return _BasePageWrapper(
       controller: controller,
-      page: buildPage(context),
+      pageBuilder: buildPage,
       initPage: initPage,
     );
   }
@@ -26,13 +26,13 @@ abstract class BasePage<Controller extends BaseController>
 class _BasePageWrapper<Controller extends BaseController>
     extends StatefulWidget {
   final Controller controller;
-  final Widget page;
+  final Widget Function(BuildContext context) pageBuilder;
   final Function(BuildContext context) initPage;
 
   const _BasePageWrapper({
     super.key,
     required this.controller,
-    required this.page,
+    required this.pageBuilder,
     required this.initPage,
   });
 
@@ -50,13 +50,15 @@ class _BasePageWrapperState extends State<_BasePageWrapper>
   bool get isTopPage =>
       _route != null && appRouteObserver.currentTopRoute == _route;
 
+  Widget? _content;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     widget.controller.initTickerProvider(this);
     widget.controller.onInit();
-    widget.initPage?.call(context);
+    widget.initPage(context);
   }
 
   @override
@@ -81,7 +83,8 @@ class _BasePageWrapperState extends State<_BasePageWrapper>
 
   @override
   Widget build(BuildContext context) {
-    return widget.page;
+    _content ??= widget.pageBuilder.call(context);
+    return _content!;
   }
 
   @override
