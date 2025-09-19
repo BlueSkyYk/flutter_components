@@ -21,6 +21,7 @@ abstract class BasePage<Controller extends BaseController>
       valueListenable: controller.canGesturePop,
       builder: (context, value, child) {
         return PopScope(
+          canPop: value,
           onPopInvokedWithResult: onPopInvokedWithResult,
           child: _BasePageWrapper(
             controller: controller,
