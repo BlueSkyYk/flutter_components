@@ -13,6 +13,8 @@ abstract class BaseController {
 
   TickerProvider? _tickerProvider;
 
+  final ValueNotifier<bool> canGesturePop = ValueNotifier<bool>(false);
+
   void initTickerProvider(TickerProvider provider) {
     _tickerProvider = provider;
   }
@@ -48,5 +50,9 @@ abstract class BaseController {
     } else {
       onHide();
     }
+  }
+
+  void setCanGesturePop(bool value) {
+    canGesturePop.value = value;
   }
 }

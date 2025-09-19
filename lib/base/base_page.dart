@@ -13,12 +13,22 @@ abstract class BasePage<Controller extends BaseController>
 
   Widget buildPage(BuildContext context);
 
+  void onPopInvokedWithResult(bool didPop, dynamic result) {}
+
   @override
   Widget build(BuildContext context) {
-    return _BasePageWrapper(
-      controller: controller,
-      pageBuilder: buildPage,
-      initPage: initPage,
+    return ValueListenableBuilder<bool>(
+      valueListenable: controller.canGesturePop,
+      builder: (context, value, child) {
+        return PopScope(
+          onPopInvokedWithResult: onPopInvokedWithResult,
+          child: _BasePageWrapper(
+            controller: controller,
+            pageBuilder: buildPage,
+            initPage: initPage,
+          ),
+        );
+      },
     );
   }
 }
