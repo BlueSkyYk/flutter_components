@@ -13,7 +13,7 @@ abstract class BaseController {
 
   TickerProvider? _tickerProvider;
 
-  final ValueNotifier<bool> canGesturePop = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> canGesturePop = ValueNotifier<bool>(true);
 
   void initTickerProvider(TickerProvider provider) {
     _tickerProvider = provider;
